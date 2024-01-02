@@ -1,10 +1,8 @@
 #pragma once
 
 #include <atomic>
-#include <exception>
 #include <functional>
 #include <future>
-#include <memory>
 #include <mutex>
 #include <queue>
 #include <thread>
