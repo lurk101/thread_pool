@@ -1,18 +1,26 @@
+#include <unistd.h>
+
 #include <chrono>
 #include <cstdlib>
 #include <iomanip>
 #include <iostream>
+#include <mutex>
 #include <sstream>
 #include <thread>
-
-#include <unistd.h>
 
 #include "ctpl.h"
 
 using namespace std;
 using namespace ctpl;
 
-static void thrd(int id, int D) { this_thread::sleep_for(chrono::seconds(3)); }
+static mutex mtx;
+
+static void thrd(int id, int D) {
+    this_thread::sleep_for(chrono::seconds(3));
+    mtx.lock();
+    cout << D << endl;
+    mtx.unlock();
+}
 
 int main() {
     cpu_set_t mask;
