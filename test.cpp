@@ -23,10 +23,8 @@ static void thrd(int id, int D) {
 }
 
 int main() {
-    cpu_set_t mask;
-    sched_getaffinity(0, sizeof(cpu_set_t), &mask);
-    thread_pool pool(CPU_COUNT(&mask));
-    cout << "running with " << CPU_COUNT(&mask) << " threads" << endl;
+    thread_pool pool;
+    cout << "running on " << pool.size() << " threads" << endl;
     for (int D = 1; D <= 25; D++)
         pool.push(thrd, D);
 }

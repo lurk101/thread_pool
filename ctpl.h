@@ -40,7 +40,12 @@ class Queue {
 
 class thread_pool {
    public:
-    thread_pool() { init(); }
+    thread_pool() {
+        init();
+        cpu_set_t mask;
+        if (!sched_getaffinity(0, sizeof(mask), &mask)) resize(CPU_COUNT(&mask));
+    }
+
     thread_pool(int nThreads) {
         init();
         resize(nThreads);
