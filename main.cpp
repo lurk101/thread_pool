@@ -15,16 +15,15 @@ using namespace ctpl;
 
 static mutex mtx;
 
-static void thrd(int id, int D) {
+static void thrd(int id, int t) {
     this_thread::sleep_for(chrono::seconds(3));
     mtx.lock();
-    cout << D << endl;
+    cout << t << endl;
     mtx.unlock();
 }
 
 int main() {
     thread_pool pool;
     cout << "running on " << pool.size() << " threads" << endl;
-    for (int D = 1; D <= 25; D++)
-        pool.push(thrd, D);
+    for (int t = 1; t <= 25; t++) pool.push(thrd, t);
 }
