@@ -46,17 +46,15 @@ class thread_pool {
    public:
     thread_pool() {
         init();
-#if !defined(_WIN32) && (defined(__unix__) || defined(__unix) || (defined(__APPLE__) && defined(__MACH__)))
+#if !defined(_WIN32) && (defined(__unix__) || defined(__unix))
         cpu_set_t mask;
         if (!sched_getaffinity(0, sizeof(mask), &mask)) resize(CPU_COUNT(&mask));
 #elif defined(_WIN32)
         DWORD_PTR process, system;
-        if (GetProcessAffinityMask(GetCurrentProcess(), &process, &system))
-        {
+        if (GetProcessAffinityMask(GetCurrentProcess(), &process, &system)) {
             int count = 0;
             for (int i = 0; i < 64; i++)
-                if (system & (1ull << i))
-                    count++;
+                if (system & (1ull << i)) count++;
             resize(count);
             return;
         }
