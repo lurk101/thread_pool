@@ -1,5 +1,9 @@
 #pragma once
 
+#if defined(_WIN32)
+#include <Windows.h>
+#endif
+
 #include <atomic>
 #include <functional>
 #include <future>
@@ -42,8 +46,25 @@ class thread_pool {
    public:
     thread_pool() {
         init();
+#if !defined(_WIN32) && (defined(__unix__) || defined(__unix) || (defined(__APPLE__) && defined(__MACH__)))
         cpu_set_t mask;
         if (!sched_getaffinity(0, sizeof(mask), &mask)) resize(CPU_COUNT(&mask));
+#elif defined(_WIN32)
+        DWORD_PTR process, system;
+        if (GetProcessAffinityMask(GetCurrentProcess(), &process, &system))
+        {
+            int count = 0;
+            for (int i = 0; i < 64; i++)
+                if (system & (1ull << i))
+                    count++;
+            resize(count);
+            return;
+        }
+        // may be we hav't PROCESS_QUERY_INFORMATION access right
+        SYSTEM_INFO sysinfo;
+        GetSystemInfo(&sysinfo);
+        resize(sysinfo.dwNumberOfProcessors);
+#endif
     }
 
     thread_pool(int nThreads) {
