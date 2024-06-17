@@ -10,7 +10,7 @@
 #include <sstream>
 #include <thread>
 
-#include "ThreadPool.h"
+#include "ThreadPool.hpp"
 
 using namespace std;
 using namespace ThreadPool;
@@ -18,7 +18,7 @@ using namespace ThreadPool;
 static mutex mtx;
 
 static void thrd(int id, int t) {
-    this_thread::sleep_for(chrono::seconds(3));
+    this_thread::sleep_for(chrono::seconds(2));
     mtx.lock();
     cout << t << endl;
     mtx.unlock();

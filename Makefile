@@ -5,8 +5,7 @@ CPPFLAGS=-O3
 LDFLAGS=
 LDLIBS=
 
-SRCS=main.cpp ThreadPool.h
-OBJS=main.o
+OBJS=main.o getnumproc.o
 EXE=pool
 
 all: $(EXE)
@@ -14,7 +13,9 @@ all: $(EXE)
 $(EXE): $(OBJS)
 	$(CXX) $(LDFLAGS) -o $(EXE) $(OBJS) $(LDLIBS)
 
-main.o: main.cpp ThreadPool.h
+main.o: main.cpp ThreadPool.hpp getnumproc.hpp
+
+getnumproc.o: getnumproc.cpp getnumproc.hpp
 
 clean:
 	$(RM) $(OBJS)

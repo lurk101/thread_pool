@@ -1,9 +1,5 @@
 #pragma once
 
-#if defined(_WIN32)
-#include <Windows.h>
-#endif
-
 #include <atomic>
 #include <functional>
 #include <future>
@@ -11,6 +7,8 @@
 #include <queue>
 #include <thread>
 #include <vector>
+
+#include "getnumproc.hpp"
 
 namespace ThreadPool {
 
@@ -51,31 +49,7 @@ class thread_pool {
    public:
     thread_pool() {
         init();
-        // get number of avalable cores, this is the only OS dependent code
-        // so far.
-#if !defined(_WIN32) && (defined(__unix__) || defined(__unix))
-        cpu_set_t mask;
-        if (!sched_getaffinity(0, sizeof(mask), &mask)) resize(CPU_COUNT(&mask));
-#elif defined(_WIN32)
-        DWORD_PTR process, system;
-        int count;
-        if (GetProcessAffinityMask(GetCurrentProcess(), &process, &system)) {
-#if _MSVC_LANG >= 202002L
-            count = std::popcount(system);
-#else
-            count = 0;
-            for (int i = 0; i < 64; i++)
-                if (system & (1ull << i)) count++;
-#endif
-        } else {
-            // may be we hav't PROCESS_QUERY_INFORMATION access right
-            SYSTEM_INFO sysinfo;
-            GetSystemInfo(&sysinfo);
-            count = sysinfo.dwNumberOfProcessors;
-        }
-        resize(count);
-        return;
-#endif
+        resize(getnumproc());
     }
 
     thread_pool(int nThreads) {
@@ -121,9 +95,9 @@ class thread_pool {
                     cv.notify_all();
                 }
                 threads.resize(nThreads);  // safe to delete because the
-                                           // threads are detached
-                flags.resize(nThreads);    // safe to delete because the threads have copies
-                                           // of shared_ptr of the flags, not originals
+                // threads are detached
+                flags.resize(nThreads);  // safe to delete because the threads have copies
+                // of shared_ptr of the flags, not originals
             }
         }
     }
@@ -218,11 +192,10 @@ class thread_pool {
                 while (isPop) {  // if there is anything in the queue
                     std::unique_ptr<std::function<void(int id)>> func(
                         _f);  // at return, delete the function even if an
-                              // exception occurred
+                    // exception occurred
                     (*_f)(i);
-                    if (_flag)
-                        return;  // the thread is wanted to stop, return even if
-                                 // the queue is not empty yet
+                    if (_flag) return;  // the thread is wanted to stop, return even if
+                    // the queue is not empty yet
                     else
                         isPop = q.pop(_f);
                 }
@@ -234,9 +207,8 @@ class thread_pool {
                     return isPop || isDone || _flag;
                 });
                 --nWaiting;
-                if (!isPop)
-                    return;  // if the queue is empty and isDone == true or
-                             // *flag then return
+                if (!isPop) return;  // if the queue is empty and isDone == true or
+                // *flag then return
             }
         };
         threads[i].reset(new std::thread(f));  // compiler may not support std::make_unique()
