@@ -7,6 +7,7 @@
 #include <iomanip>
 #include <iostream>
 #include <mutex>
+#include <random>
 #include <sstream>
 #include <thread>
 
@@ -18,7 +19,10 @@ using namespace ThreadPool;
 static mutex mtx;
 
 static void thrd(int id, int t) {
-    this_thread::sleep_for(chrono::seconds(2));
+    random_device dev;
+    mt19937 rng(dev());
+    uniform_int_distribution<std::mt19937::result_type> dist(1000, 3000);
+    this_thread::sleep_for(chrono::milliseconds(dist(rng)));
     mtx.lock();
     cout << t << endl;
     mtx.unlock();
