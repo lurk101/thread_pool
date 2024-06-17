@@ -36,6 +36,11 @@ class Queue {
         return q.empty();
     }
 
+    int size() {
+        std::unique_lock<std::mutex> lock(mutex);
+        return int(q.size());
+    }
+
    private:
     std::queue<T> q;
     std::mutex mutex;
@@ -87,6 +92,9 @@ class thread_pool {
     // number of idle threads
     int n_idle() { return nWaiting; }
     std::thread& get_thread(int i) { return *threads[i]; }
+
+    // number of queued threads
+    int n_queued() { return q.size(); }
 
     // change the number of threads in the pool
     // should be called from one thread, otherwise be careful to not interleave,

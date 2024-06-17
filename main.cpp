@@ -28,4 +28,5 @@ int main() {
     thread_pool pool;
     cout << "running on " << pool.size() << " threads" << endl;
     for (int t = 1; t <= 25; t++) pool.push(thrd, t);
+    cout << pool.n_queued() << " threads queued" << endl;
 }

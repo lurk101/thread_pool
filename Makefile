@@ -7,11 +7,12 @@ LDLIBS=
 
 SRCS=main.cpp ThreadPool.h
 OBJS=main.o
+EXE=pool
 
-all: example
+all: $(EXE)
 
-example: $(OBJS)
-	$(CXX) $(LDFLAGS) -o example $(OBJS) $(LDLIBS)
+$(EXE): $(OBJS)
+	$(CXX) $(LDFLAGS) -o $(EXE) $(OBJS) $(LDLIBS)
 
 main.o: main.cpp ThreadPool.h
 
@@ -19,4 +20,4 @@ clean:
 	$(RM) $(OBJS)
 
 distclean: clean
-	$(RM) example
+	$(RM) $(EXE)
