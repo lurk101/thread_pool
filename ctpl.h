@@ -46,22 +46,30 @@ class thread_pool {
    public:
     thread_pool() {
         init();
+        // get number of avalable cores, this is the only OS dependent code
+        // so far.
 #if !defined(_WIN32) && (defined(__unix__) || defined(__unix))
         cpu_set_t mask;
         if (!sched_getaffinity(0, sizeof(mask), &mask)) resize(CPU_COUNT(&mask));
 #elif defined(_WIN32)
         DWORD_PTR process, system;
+        int count;
         if (GetProcessAffinityMask(GetCurrentProcess(), &process, &system)) {
-            int count = 0;
+#if _MSVC_LANG >= 202002L
+            count = std::popcount(system);
+#else
+            count = 0;
             for (int i = 0; i < 64; i++)
                 if (system & (1ull << i)) count++;
-            resize(count);
-            return;
+#endif
+        } else {
+            // may be we hav't PROCESS_QUERY_INFORMATION access right
+            SYSTEM_INFO sysinfo;
+            GetSystemInfo(&sysinfo);
+            count = sysinfo.dwNumberOfProcessors;
         }
-        // may be we hav't PROCESS_QUERY_INFORMATION access right
-        SYSTEM_INFO sysinfo;
-        GetSystemInfo(&sysinfo);
-        resize(sysinfo.dwNumberOfProcessors);
+        resize(count);
+        return;
 #endif
     }
 
