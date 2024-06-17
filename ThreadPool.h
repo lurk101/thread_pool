@@ -12,7 +12,7 @@
 #include <thread>
 #include <vector>
 
-namespace ctpl {
+namespace ThreadPool {
 
 namespace detail {
 template <typename T>
@@ -251,4 +251,4 @@ class thread_pool {
     std::condition_variable cv;
 };
 
-}  // namespace ctpl
+}  // namespace ThreadPool

@@ -10,10 +10,10 @@
 #include <sstream>
 #include <thread>
 
-#include "ctpl.h"
+#include "ThreadPool.h"
 
 using namespace std;
-using namespace ctpl;
+using namespace ThreadPool;
 
 static mutex mtx;
 

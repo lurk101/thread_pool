@@ -5,7 +5,7 @@ CPPFLAGS=-O3
 LDFLAGS=
 LDLIBS=
 
-SRCS=main.cpp ctpl.h
+SRCS=main.cpp ThreadPool.h
 OBJS=main.o
 
 all: example
@@ -13,7 +13,7 @@ all: example
 example: $(OBJS)
 	$(CXX) $(LDFLAGS) -o example $(OBJS) $(LDLIBS)
 
-main.o: main.cpp ctpl.h
+main.o: main.cpp ThreadPool.h
 
 clean:
 	$(RM) $(OBJS)
