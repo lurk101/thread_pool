@@ -1,7 +1,7 @@
 CC=gcc
 CXX=g++
 RM=rm -f
-CPPFLAGS=-O3
+CPPFLAGS=-O3 -flto
 LDFLAGS=
 LDLIBS=
 
@@ -13,9 +13,9 @@ all: $(EXE)
 $(EXE): $(OBJS)
 	$(CXX) $(LDFLAGS) -o $(EXE) $(OBJS) $(LDLIBS)
 
-test.o: test.cpp ThreadPool.hpp getnumproc.hpp
+test.o: test.cpp ThreadPool.hpp getnumproc.h
 
-getnumproc.o: getnumproc.cpp getnumproc.hpp
+getnumproc.o: getnumproc.c getnumproc.h
 
 clean:
 	$(RM) $(OBJS)

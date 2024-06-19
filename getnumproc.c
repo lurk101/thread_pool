@@ -4,10 +4,13 @@
 #include <bit>
 #endif  // _MSVC_LANG >= 202002L
 #elif !defined(_WIN32) && (defined(__unix__) || defined(__unix))
+#if !defined(_GNU_SOURCE)
+#define _GNU_SOURCE
+#endif
 #include <sched.h>
 #endif
 
-#include "getnumproc.hpp"
+#include "getnumproc.h"
 
 int getnumproc(void) {
     // get number of avalable cores, this is the only OS dependent code
