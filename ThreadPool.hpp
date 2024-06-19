@@ -36,7 +36,7 @@ class Queue {
 
     int size() {
         std::unique_lock<std::mutex> lock(mutex);
-        return int(q.size());
+        return static_cast<int>(q.size());
     }
 
    private:
@@ -162,9 +162,9 @@ class thread_pool {
         return pck->get_future();
     }
 
-    // run the user's function that excepts argument int - id of the running
+    // run the user's function that accepts argument int - id of the running
     // thread. returned value is templatized operator returns std::future, where
-    // the user can get the result and rethrow the catched exceptins
+    // the user can get the result and rethrow the caught exceptions
     template <typename F>
     auto push(F&& f) -> std::future<decltype(f(0))> {
         auto pck = std::make_shared<std::packaged_task<decltype(f(0))(int)>>(std::forward<F>(f));
