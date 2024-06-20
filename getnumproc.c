@@ -1,41 +1,45 @@
+// get number of avalable cores, this is the only OS dependent code
+// so far.
+
 #if defined(_WIN32)
-#include <Windows.h>
-#if _MSVC_LANG >= 202002L
-#include <bit>
-#endif  // _MSVC_LANG >= 202002L
-#elif !defined(_WIN32) && (defined(__unix__) || defined(__unix))
-#if !defined(_GNU_SOURCE)
-#define _GNU_SOURCE
-#endif
-#include <sched.h>
-#endif
 
 #include "getnumproc.h"
+
+#include <Windows.h>
 
 int getnumproc(void) {
     // get number of avalable cores, this is the only OS dependent code
     // so far.
-    int count = 0;
-#if !defined(_WIN32) && (defined(__unix__) || defined(__unix))
-    cpu_set_t mask;
-    if (!sched_getaffinity(0, sizeof(mask), &mask)) count = CPU_COUNT(&mask);
-#elif defined(_WIN32)
     DWORD_PTR process, system;
+    int count;
     if (GetProcessAffinityMask(GetCurrentProcess(), &process, &system)) {
-#if _MSVC_LANG >= 202002L
-        count = std::popcount(system);
-#else
+        count = 0;
         while (system) {
             if (system & 1) count++;
             system >>= 1;
         }
-#endif  // _MSVC_LANG >= 202002L
     } else {
         // may be we hav't PROCESS_QUERY_INFORMATION access right
         SYSTEM_INFO sysinfo;
         GetSystemInfo(&sysinfo);
         count = sysinfo.dwNumberOfProcessors;
     }
-#endif  // defined(_WIN32)
     return count;
 }
+
+#elif defined(__GNUC__)
+
+#if !defined(_GNU_SOURCE)
+#define _GNU_SOURCE
+#endif
+#include <sched.h>
+
+#include "getnumproc.h"
+
+int getnumproc(void) {
+    cpu_set_t mask;
+    if (!sched_getaffinity(0, sizeof(mask), &mask)) return CPU_COUNT(&mask);
+    return 1;
+}
+
+#endif
