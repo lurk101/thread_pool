@@ -13,11 +13,8 @@ int getnumproc(void) {
     DWORD_PTR process, system;
     int count;
     if (GetProcessAffinityMask(GetCurrentProcess(), &process, &system)) {
-        count = 0;
-        while (system) {
+        for (count = 0; system; system >>= 1)
             if (system & 1) count++;
-            system >>= 1;
-        }
     } else {
         // may be we hav't PROCESS_QUERY_INFORMATION access right
         SYSTEM_INFO sysinfo;

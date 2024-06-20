@@ -34,9 +34,9 @@ class Queue {
         return q.empty();
     }
 
-    int size() {
+    size_t size() {
         std::unique_lock<std::mutex> lock(mutex);
-        return static_cast<int>(q.size());
+        return q.size();
     }
 
    private:
@@ -61,14 +61,14 @@ class thread_pool {
     ~thread_pool() { stop(true); }
 
     // get the number of running threads in the pool
-    int size() { return static_cast<int>(threads.size()); }
+    size_t size() { return threads.size(); }
 
     // number of idle threads
-    int n_idle() { return nWaiting; }
+    size_t n_idle() { return nWaiting; }
     std::thread& get_thread(int i) { return *threads[i]; }
 
     // number of queued threads
-    int n_queued() { return q.size(); }
+    size_t n_queued() { return q.size(); }
 
     // change the number of threads in the pool
     // should be called from one thread, otherwise be careful to not interleave,
@@ -127,7 +127,7 @@ class thread_pool {
         if (!isWait) {
             if (isStop) return;
             isStop = true;
-            for (int i = 0, n = size(); i < n; ++i) {
+            for (size_t i = 0, n = size(); i < n; ++i) {
                 *flags[i] = true;  // command the threads to stop
             }
             clear_queue();  // empty the queue
@@ -225,7 +225,7 @@ class thread_pool {
     detail::Queue<std::function<void(int id)>*> q;
     std::atomic<bool> isDone;
     std::atomic<bool> isStop;
-    std::atomic<int> nWaiting;  // how many threads are waiting
+    std::atomic<size_t> nWaiting;  // how many threads are waiting
 
     std::mutex mutex;
     std::condition_variable cv;
