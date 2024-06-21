@@ -1,14 +1,8 @@
-#if !defined(_WIN32) && (defined(__unix__) || defined(__unix))
-#include <unistd.h>
-#endif
-
 #include <chrono>
-#include <cstdlib>
 #include <iomanip>
 #include <iostream>
 #include <mutex>
 #include <random>
-#include <sstream>
 #include <thread>
 
 #include "ThreadPool.hpp"
