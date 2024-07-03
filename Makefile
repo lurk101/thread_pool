@@ -1,8 +1,8 @@
 CC=gcc
 CXX=g++
 RM=rm -f
-CPPFLAGS=-O3 -flto
-LDFLAGS=-O3
+CPPFLAGS=-O3 -flto -ffunction-sections -fdata-sections
+LDFLAGS=-O1 -Wl,--gc-sections -Wl,--strip-all
 LDLIBS=
 
 OBJS=threads.o getnumproc.o
