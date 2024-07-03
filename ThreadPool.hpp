@@ -67,9 +67,6 @@ class thread_pool {
     size_t n_idle() { return nWaiting; }
     std::thread& get_thread(int i) { return *threads[i]; }
 
-    // number of queued threads
-    size_t n_queued() { return q.size(); }
-
     // change the number of threads in the pool
     // should be called from one thread, otherwise be careful to not interleave,
     // also with this->stop() nThreads must be >= 0

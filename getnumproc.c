@@ -16,7 +16,7 @@ int getnumproc(void) {
         for (count = 0; system; system >>= 1)
             if (system & 1) count++;
     } else {
-        // may be we hav't PROCESS_QUERY_INFORMATION access right
+        // maybe we havn't PROCESS_QUERY_INFORMATION access right
         SYSTEM_INFO sysinfo;
         GetSystemInfo(&sysinfo);
         count = sysinfo.dwNumberOfProcessors;
