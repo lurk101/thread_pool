@@ -15,7 +15,7 @@ $(EXE): $(OBJS)
 
 main.o: main.cpp ThreadPool.h getnumproc.h
 
-getnumproc.o: getnumproc.cpp getnumproc.h
+getnumproc.o: getnumproc.c getnumproc.h
 
 clean:
 	$(RM) $(OBJS)

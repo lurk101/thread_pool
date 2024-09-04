@@ -4,6 +4,7 @@
 #include <bit>
 #endif  // _MSVC_LANG >= 202002L
 #elif !defined(_WIN32) && (defined(__unix__) || defined(__unix))
+#define _GNU_SOURCE
 #include <sched.h>
 #endif
 

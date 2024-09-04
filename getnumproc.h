@@ -1,3 +1,7 @@
 #pragma once
 
-int getnumproc(void);
+#if defined(__cplusplus)
+extern "C"
+#endif
+    int
+    getnumproc(void);
