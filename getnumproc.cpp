@@ -7,7 +7,7 @@
 #include <sched.h>
 #endif
 
-#include "getnumproc.hpp"
+#include "getnumproc.h"
 
 int getnumproc(void) {
     // get number of avalable cores, this is the only OS dependent code

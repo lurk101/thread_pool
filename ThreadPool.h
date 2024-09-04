@@ -8,7 +8,7 @@
 #include <thread>
 #include <vector>
 
-#include "getnumproc.hpp"
+#include "getnumproc.h"
 
 namespace ThreadPool {
 

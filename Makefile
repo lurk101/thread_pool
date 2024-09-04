@@ -13,9 +13,9 @@ all: $(EXE)
 $(EXE): $(OBJS)
 	$(CXX) $(LDFLAGS) -o $(EXE) $(OBJS) $(LDLIBS)
 
-main.o: main.cpp ThreadPool.hpp getnumproc.hpp
+main.o: main.cpp ThreadPool.h getnumproc.h
 
-getnumproc.o: getnumproc.cpp getnumproc.hpp
+getnumproc.o: getnumproc.cpp getnumproc.h
 
 clean:
 	$(RM) $(OBJS)

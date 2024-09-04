@@ -11,7 +11,7 @@
 #include <sstream>
 #include <thread>
 
-#include "ThreadPool.hpp"
+#include "ThreadPool.h"
 
 using namespace std;
 using namespace ThreadPool;
